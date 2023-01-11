@@ -31,21 +31,25 @@ class CharacterDetailViewController: UIViewController {
     }
     
     @objc private func updateUI() {
-        self.navigationItem.title = character.name
+        if let character = CharacterController.instance.getCharacter(withCharacterId: self.character.id) {
+            self.character = character
+            
+            self.navigationItem.title = self.character.name
 
-        self.characterName.text = character.name
-        self.characterPublicDate.text = DateUtils.dateToString(date: character.dateStringtoDate())
+            self.characterName.text = self.character.name
+            self.characterPublicDate.text = DateUtils.dateToString(date: self.character.dateStringtoDate())
 
-        if character.description.isEmpty {
-            self.characterDescription.text = "This character doesn't have Description."
-        } else {
-            self.characterDescription.text = character.description
-        }
-        
-        CharacterController.instance.fetchImage(url: URL(string: character.image.path + "." + character.image.type)!) { (image) in
-            guard let image = image else {return}
-            DispatchQueue.main.async {
-                self.characterImage.image = image
+            if character.description.isEmpty {
+                self.characterDescription.text = "This character doesn't have Description."
+            } else {
+                self.characterDescription.text = self.character.description
+            }
+            
+            CharacterController.instance.fetchImage(url: URL(string: self.character.image.path + "." + character.image.type)!) { (image) in
+                guard let image = image else {return}
+                DispatchQueue.main.async {
+                    self.characterImage.image = image
+                }
             }
         }
     }
